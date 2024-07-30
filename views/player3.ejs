@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css" />
     <link href="https://fonts.googleapis.com/css?family=Poppins|Quattrocento+Sans" rel="stylesheet" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
-    <title>PKV VIDEO PLAYER 3</title>
+    <title>VIDEO PLAYER</title>
     <style>
         html {
             font-family: Poppins;
@@ -157,7 +157,7 @@
             videoId=parts[parts.length - 2]; %>
     <div class="plyr__video-embed" id="player" style="margin: auto;">
         <video controls crossorigin playsinline id="videoContainer" style="background-color: #0A0909;">
-            <source id="masterSource" src="https://studywithme.onrender.com/download/<%= videoId %>/master.m3u8" type="application/x-mpegURL">
+            <source id="masterSource" src="https://studywithme.onrender.com/download/<%= videoId %>/master.m3u8&type=play" type="application/x-mpegURL">
         </video>
     </div>
     <% } %>
@@ -196,7 +196,7 @@
             const parts='<%= videoUrl %>'.split('/'); 
             const videoId=parts[parts.length - 2];
 
-            hls.loadSource(`https://studywithme.onrender.com/download/${videoId}/master.m3u8`);
+            hls.loadSource(`https://studywithme.onrender.com/download/${videoId}/master.m3u8?type=play`);
             hls.attachMedia(video);
 
             hls.on(Hls.Events.MANIFEST_PARSED, function () {
