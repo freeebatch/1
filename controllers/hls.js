@@ -174,7 +174,7 @@ const convertMPDToHLS = async (mpdId, quality, type) => {
         const main_data2 = await main_data.text();
         const pattern = /(\d{3,4}\.ts)/g;
         
-        const replacement = '';
+        let replacement = '';
         if (type === "download") {
             replacement = `${mainUrl}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
         } else {
