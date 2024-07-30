@@ -189,7 +189,7 @@ const convertMPDToHLS = async (mpdId, quality, type) => {
     }
 };
 
-const multiQualityHLS = async (mpdId) => {
+const multiQualityHLS = async (mpdId, type) => {
     try {
         let mpdUrl = `https://d1d34p8vz63oiq.cloudfront.net/${mpdId}/master.mpd`;
 
@@ -223,7 +223,11 @@ const multiQualityHLS = async (mpdId) => {
                 if (!quality) continue;
 
                 hlsPlaylist += `#EXT-X-STREAM-INF:BANDWIDTH=${bandwidth},RESOLUTION=${width}x${height}\n`;
-                hlsPlaylist += `https://studywithme.onrender.com/hls?v=${mpdId}&quality=${quality}&type=download\n`;
+                if(type === 'play'){
+                    hlsPlaylist += `https://studywithme.onrender.com/hls?v=${mpdId}&quality=${quality}&type=play\n`;
+                }else{
+                    hlsPlaylist += `https://studywithme.onrender.com/hls?v=${mpdId}&quality=${quality}&type=download\n`;
+                }
 
             }
         }
