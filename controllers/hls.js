@@ -6,7 +6,7 @@ import { Token } from '../models/batches.js'
 import CryptoJS from 'crypto-js'
 
 
-const convertMPDToHLS = async (mpdId, quality) => {
+const convertMPDToHLS = async (mpdId, quality, type) => {
     try {
         let db = await Token.findOne();
         const access_token = db.access_token;
@@ -173,9 +173,14 @@ const convertMPDToHLS = async (mpdId, quality) => {
         
         const main_data2 = await main_data.text();
         const pattern = /(\d{3,4}\.ts)/g;
-        // const replacement = `${mainUrl}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
-        const replacement = `https://studywithme.onrender.com/dash/${mpdId}/hls/${quality}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
-
+        
+        const replacement = '';
+        if (type === "download") {
+            replacement = `${mainUrl}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
+        } else {
+            replacement = `https://studywithme.onrender.com/dash/${mpdId}/hls/${quality}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
+        }
+        
         const newText = main_data2.replace(pattern, replacement).replace("https://api.penpencil.co/v1/videos/", `https://studywithme.onrender.com/`)
         
         return newText;
