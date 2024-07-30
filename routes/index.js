@@ -153,7 +153,7 @@ router.get('/hls', async function (req, res, next) {
 router.get('/download/:vidID/master.m3u8', async function (req, res, next) {
   try {
     const vidID = req.params.vidID;
-    const type = req.params.type;
+    const type = req.query.type;
     const data = await multiQualityHLS(vidID, type);
 
     res.setHeader('Content-Type', 'application/x-mpegurl; charset=utf-8');
