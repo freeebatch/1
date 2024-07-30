@@ -223,7 +223,7 @@ const multiQualityHLS = async (mpdId) => {
                 if (!quality) continue;
 
                 hlsPlaylist += `#EXT-X-STREAM-INF:BANDWIDTH=${bandwidth},RESOLUTION=${width}x${height}\n`;
-                hlsPlaylist += `https://studywithme.onrender.com/hls?v=${mpdId}&quality=${quality}\n`;
+                hlsPlaylist += `https://studywithme.onrender.com/hls?v=${mpdId}&quality=${quality}&type=download\n`;
 
             }
         }
