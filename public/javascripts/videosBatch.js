@@ -20,7 +20,7 @@ function downloadPdf(url, filename) {
 function playVideoOnVlc(button, videoId) {
     const qualityOptions = `
         <a href="/redirect-to-vlc?v=${videoId}&quality=240" target="_blank">240p</a>
-        <a href="/redirect-to-vlc?v=${videoId}&quality=320" target="_blank">360p</a>
+        <a href="/redirect-to-vlc?v=${videoId}&quality=360" target="_blank">360p</a>
         <a href="/redirect-to-vlc?v=${videoId}&quality=480" target="_blank">480p</a>
         <a href="/redirect-to-vlc?v=${videoId}&quality=720" target="_blank">720p</a>
     `;
