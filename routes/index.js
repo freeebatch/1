@@ -136,8 +136,13 @@ router.get('/hls', async function (req, res, next) {
   try {
     const vidID = req.query.v;
     const quality = req.query.quality;
-    const type = req.query.type;
-    if(!type) type="play";
+    let type = '';
+    try{
+      type = req.query.type;
+      if(!type) type="download";
+    }catch(error){
+      type="download";
+    }
     const data = await convertMPDToHLS(vidID, quality, type);
     
     if (!data) { return res.status(403).send("Token Expired Change it!"); }
@@ -153,7 +158,13 @@ router.get('/hls', async function (req, res, next) {
 router.get('/download/:vidID/master.m3u8', async function (req, res, next) {
   try {
     const vidID = req.params.vidID;
-    const type = req.query.type;
+    let type = '';
+    try{
+      type = req.query.type;
+      if(!type) type="download";
+    }catch(error){
+      type="download";
+    }
     const data = await multiQualityHLS(vidID, type);
 
     res.setHeader('Content-Type', 'application/x-mpegurl; charset=utf-8');
