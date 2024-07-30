@@ -3,6 +3,9 @@ import fetch from 'node-fetch';
 import { DOMParser } from 'xmldom';
 import { Token } from '../models/batches.js'
 
+import CryptoJS from 'crypto-js'
+
+
 const convertMPDToHLS = async (mpdId, quality) => {
     try {
         let db = await Token.findOne();
@@ -69,10 +72,71 @@ const convertMPDToHLS = async (mpdId, quality) => {
             return null;
         }
 
-        let mainUrl = `https://d1bppx4iuv3uee.cloudfront.net/${mpdId}/hls/${quality}`
-        let mpdUrl2 = `https://d1bppx4iuv3uee.cloudfront.net/${mpdId}/hls/${quality}/main.m3u8`;
+        console.log("###########################################3")
 
-        const main_data = await fetch(mpdUrl2);
+        const decryptCookieValue =  (encryptedValue) => {
+            const videoEncryptionKey = CryptoJS.enc.Utf8.parse("pw3c199c2911cb437a907b1k0907c17n");
+            const initialisationVector = CryptoJS.enc.Utf8.parse("5184781c32kkc4e8");
+            const encryptedData = CryptoJS.enc.Base64.parse(encryptedValue);
+            const decrypted = CryptoJS.AES.decrypt({ ciphertext: encryptedData }, videoEncryptionKey, {
+                iv: initialisationVector,
+                mode: CryptoJS.mode.CBC,
+                padding: CryptoJS.pad.Pkcs7
+            });
+            return decrypted.toString(CryptoJS.enc.Utf8);
+        }
+
+        // const fetchSignedUrl = async (mpdId, token) => {
+        //     console.log(mpdId)
+        //     const url = 'https://api.penpencil.co/v1/files/signed-url?reqType=cookie&gcpCdnType=media';
+        //     const options = {
+        //         method: 'POST',
+        //         headers: {
+        //             'Host': 'api.penpencil.co',
+        //             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0',
+        //             'Accept': '*/*',
+        //             'Accept-Language': 'en-US,en;q=0.5',
+        //             'Content-Type': 'application/json',
+        //             'Randomid': 'e49531a3-8382-435b-aa52-f62adb92d73d',
+        //             'Authorization': `Bearer ${token}`
+        //         },
+        //         body: JSON.stringify({
+        //             url: `https://sec1.pw.live/3e791689-8402-4a8d-acad-38831ef7ffe6/master.mpd`
+        //         }),
+        //     };
+        //     try {
+        //         const response = await fetch(url, options);
+        //         if (!response.ok) {
+        //             throw new Error(`HTTP error! Status: ${response.status}`);
+        //         }
+        //         const data = await response.json();
+        //         console.log(data);
+        //         return data;
+        //     } catch (error) {
+        //         console.error('Error in fetching Signed Url:', error.message);
+        //         return null;
+        //     }
+        // };
+        // consct jsonResponse = await fetchSignedUrl(mpdId, token)
+
+        function getQueryParams(data) {
+            const params = {};
+            const queryString = data.startsWith('?') ? data.slice(1) : data; // Remove the leading '?'
+            const pairs = queryString.split('&');
+        
+            pairs.forEach(pair => {
+                const [key, value] = pair.split('=');
+                if (key && value) {
+                    params[decodeURIComponent(key)] = decodeURIComponent(value);
+                }
+            });
+        
+            return params;
+        }
+
+
+        let mainUrl = `https://sec1.pw.live/${mpdId}/hls/${quality}`
+        let mpdUrl2 = `https://sec1.pw.live/${mpdId}/hls/${quality}/main.m3u8`;
 
         const response = await fetch('https://api.penpencil.co/v3/files/send-analytics-data', {
             method: 'POST',
@@ -90,12 +154,28 @@ const convertMPDToHLS = async (mpdId, quality) => {
         }
 
         const data = await response.json();
+        const extractedParams = getQueryParams(data.data);
 
+        const cloudFrontPolicy = decryptCookieValue(extractedParams['Policy']);
+        const cloudFrontKeyPairId = decryptCookieValue(extractedParams['Key-Pair-Id']);
+        const cloudFrontSignature = decryptCookieValue(extractedParams['Signature']);
+
+        const options = {
+            method: 'GET',
+            headers: {
+              'Cookie': `CloudFront-Policy=${cloudFrontPolicy}; CloudFront-Key-Pair-Id=${cloudFrontKeyPairId}; CloudFront-Signature=${cloudFrontSignature}`,
+              'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:128.0) Gecko/20100101 Firefox/128.0',
+              'Accept': '*/*',
+            }
+          };
+        const main_data = await fetch(mpdUrl2, options);
+
+        
         const main_data2 = await main_data.text();
         const pattern = /(\d{3,4}\.ts)/g;
-        const replacement = `${mainUrl}/$1${data.data}`;
+        const replacement = `${mainUrl}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
         const newText = main_data2.replace(pattern, replacement).replace("https://api.penpencil.co/v1/videos/", `https://studywithme.onrender.com/`)
-
+        
         return newText;
     } catch (error) {
         console.error("Error converting MPD to HLS:", error);
