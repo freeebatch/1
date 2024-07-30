@@ -178,6 +178,26 @@ router.get('/get-hls-key', async (req, res) => {
   }
 });
 
+router.get('/dash/:vidId/hls/:quality/:ts', async (req, res) => {
+  const policy = req.query.Policy;
+  const keyPairId = req.query['Key-Pair-Id'];
+  const Signature = req.query.Signature;
+  const vidId = req.params.vidId
+  const quality = req.params.quality
+  const ts = req.params.ts
+  
+  const url = `https://sec1.pw.live/${vidId}/hls/${quality}/${ts}?Policy=${policy}&Key-Pair-Id=${keyPairId}&Signature=${Signature}`
+  try {
+    const response = await fetch(url);
+    const data = await response.arrayBuffer();  // Use arrayBuffer() for binary data
+    res.setHeader('Content-Type', 'application/octet-stream');  // Set correct MIME type for binary data
+    res.send(Buffer.from(data));  // Convert ArrayBuffer to Buffer
+  } catch (error) {
+    console.error('Error:', error);
+    res.status(500).send('An error occurred');
+  }
+});
+
 
 router.get('/play', async function (req, res, next) {
   let videoUrl = req.query.videoUrl;
