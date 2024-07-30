@@ -1,0 +1,24 @@
+<svg height='32' viewBox='0 0 32 32' width='32'
+     xmlns='http://www.w3.org/2000/svg'>
+  <defs>
+    <filter filterUnits='userSpaceOnUse' height='32' id='Ellipse_967' width='32' x='0' y='0'>
+      <feOffset dy='2' input='SourceAlpha' />
+      <feGaussianBlur result='blur' stdDeviation='2' />
+      <feFlood flood-opacity='0.18' />
+      <feComposite in2='blur' operator='in' />
+      <feComposite in='SourceGraphic' />
+    </filter>
+  </defs>
+  <g data-name='Group 18447' id='Group_18447' transform='translate(5.924 4)'>
+    <g filter='url(#Ellipse_967)' transform='matrix(1, 0, 0, 1, -5.92, -4)'>
+      <g data-name='Ellipse 967' fill='#fff' id='Ellipse_967-2' opacity='0.2' stroke='#594cda'
+         stroke-width='1' transform='translate(6 4)'>
+        <circle cx='10' cy='10' r='10' stroke='none' />
+        <circle cx='10' cy='10' fill='none' r='9.5' />
+      </g>
+    </g>
+    <path d='M3.354,10.66H10.6a.6.6,0,0,1,.082,1.2l-.082.006H3.354a.6.6,0,0,1-.082-1.2l.082-.006h0ZM6.894,1.006,6.976,1a.6.6,0,0,1,.6.522L7.58,1.6V7.793L9.4,5.978a.6.6,0,0,1,.786-.058l.068.058a.6.6,0,0,1,.058.786l-.058.068L7.4,9.678a.6.6,0,0,1-.786.058l-.068-.058L3.7,6.832a.6.6,0,0,1,.786-.912l.068.058L6.372,7.794V1.6a.6.6,0,0,1,.522-.6L6.976,1Z'
+          fill='#594cda'
+          id='download' transform='translate(2.806 3)' />
+  </g>
+</svg>

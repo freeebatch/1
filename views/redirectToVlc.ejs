@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Redirecting to VLC</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        function openVLC(url) {
+            if (/Android/i.test(navigator.userAgent)) {
+                // Android
+                window.location = url;
+                setTimeout(function () {
+                    if (!document.hidden) {
+                        window.location = 'https://play.google.com/store/apps/details?id=org.videolan.vlc';
+                    }
+                }, 2000);
+            } else {
+                // PC
+                let iframe = document.createElement('iframe');
+                iframe.style.display = 'none';
+                iframe.src = url;
+                document.body.appendChild(iframe);
+
+                setTimeout(function () {
+                    document.body.removeChild(iframe);
+                    if (!document.hidden) {
+                        alert('If VLC did not open automatically, please follow the instructions below.');
+                    }
+                }, 2000);
+            }
+        }
+    </script>
+</head>
+
+<body onload="openVLC('vlc://https://studywithme.onrender.com/hls?v=<%= vidID %>&quality=<%= quality %>')">
+    <div class="container text-center mt-5">
+        <div class="alert alert-info">
+            <p>If you are not redirected automatically, <a
+                    href="vlc://https://studywithme.onrender.com/hls?v=<%= vidID %>&quality=<%= quality %>">click here</a>
+                to open the stream in VLC.</p>
+            <p>If VLC is not installed:
+            <ul>
+                <li><a href="https://play.google.com/store/apps/details?id=org.videolan.vlc">Download it from the Play
+                        Store (Android)</a></li>
+                <li><a href="https://www.videolan.org/vlc/index.html">Download it from the official website (PC)</a>
+                </li>
+            </ul>
+            </p>
+            <hr>
+            <h5>Manual Instructions for PC:</h5>
+            <p>1. Open VLC Media Player.</p>
+            <p>2. Go to <strong>Media</strong> > <strong>Open Network Stream</strong>.</p>
+            <p>3. Paste the following URL and click <strong>Play</strong>:</p>
+            <p><code>https://studywithme.onrender.com/hls?v=<%= vidID %>&quality=<%= quality %></code></p>
+        </div>
+    </div>
+</body>
+
+</html>

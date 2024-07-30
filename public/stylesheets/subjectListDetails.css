@@ -1,0 +1,84 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+body{
+    background-color: #fff;
+}
+header{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin: 2rem 0;
+}
+header div{
+    text-align: center; 
+    font-size: 2rem; 
+}
+header a{
+    text-decoration: none; 
+    border: 1px solid #000;
+    border-radius: 50%;
+    display: inline-block;
+    padding: 5px 6px;
+}
+header a i{
+    font-size: 20px;
+    color: #000;
+    font-weight: bold;
+    font-family: monospace;
+}
+
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 2rem;
+}
+
+.mat-card {
+    background-color: #fafafa;
+    display: inline-block;
+    width: 350px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-decoration: none;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.border-left {
+    padding: 0.5rem 0;
+    border-left: 4px solid #8c81e9;
+    padding-left: 10px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.tile-title {
+    font-size: 1.25rem;
+    margin-bottom: 0;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.tile-subtitle {
+    font-size: 1rem;
+    color: #666;
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.8rem;
+}
+
+.vl {
+    border-left: 1px solid #8c81e9;
+    height: 1rem;
+    margin: 0 5px;
+}

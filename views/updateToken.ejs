@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Token</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container mt-5">
+    <h1 class="text-center">Update Token</h1>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <form id="tokenForm" action="/token/update" method="post">
+              <div class="form-group">
+                <label for="access_token">Access Token</label>
+                <input type="text" class="form-control" id="access_token" name="access_token" placeholder="Enter Access Token" required>
+              </div>
+              <div class="form-group">
+                <label for="refresh_token">Refresh Token</label>
+                <input type="text" class="form-control" id="refresh_token" name="refresh_token" placeholder="Enter Refresh Token" required>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Update Token</button>
+            </form>
+            <div id="message" class="mt-3"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

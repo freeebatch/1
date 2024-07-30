@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Batches</title>
+  <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+  <link rel="stylesheet" href="/stylesheets/batch.css">
+</head>
+
+<body>
+  <header>
+    <a href="/">
+      <i class="ri-arrow-left-line"></i></a>
+    <h1>
+      Saved Batches
+    </h1>
+  </header>
+  <div class="container">
+    <% if (batch.length> 0) { %>
+      <% batch.forEach(course=> { %>
+        <div class="card">
+          <h2>
+            <% if (course.name.length > 35) { %>
+              <%= course.name.slice(0, 35) + '...' %>
+          <% } else { %>
+              <%= course.name %>
+          <% } %>
+          </h2>
+          <img src="<%= course.previewImage %>" alt="<%= course.name %>">
+          <div>
+          </div>
+          <a href="/saved/batches/<%= course.slug %>/details">Let's Study</a>
+        </div>
+        <% }); %>
+          <% } else { %>
+            <img src="/images/coming-soon.png" alt="">
+            <% } %>
+  </div>
+</body>
+
+</html>

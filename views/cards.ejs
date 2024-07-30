@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pdf</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 62.5%;
+        }
+
+        body {
+            background-color: #1e1e1e;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+
+        .card__pdf {
+            background-color: #333;
+            border-radius: 10px;
+            margin: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            gap: 0.6rem;
+            cursor: pointer;
+            max-width: 300px;
+            overflow: hidden;
+        }
+
+        .content__pdf{
+            box-shadow: 2px 2px 8px rgba(255, 255, 255, 0.2);
+            padding: 1rem 1rem 3rem 1rem;
+        }
+
+        .attachment-text {
+            font-size: 1.6rem;
+            word-break: break-word;
+        }
+
+        .play-div {
+            padding: 0.5rem;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.7rem 2rem;
+        }
+
+        .play-div i {
+            font-size: 2rem;
+            padding: 0.25rem;
+            aspect-ratio: 1/1;
+            border-radius: 50%;
+            background-color: white;
+            color: #5A4BDA;
+            border: 3px solid rgba(0, 0, 0, 0.6);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="card__pdf">
+            <div class="content__pdf">
+                <p class="attachment-text">Advance Practice Session : Class Notes (Conic Sect... </p>
+            </div>
+            <div class="play-div">
+                <i class="ri-file-pdf-2-fill"></i>
+                <i class="ri-download-fill"></i>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

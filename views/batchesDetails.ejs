@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/batchesDetails.css">
+</head>
+
+<body>
+    <header>
+        <a href="/batches">
+            <i class="ri-arrow-left-line"></i></a>
+        <h1>
+            <%= specificeBatch.data.name %>
+        </h1>
+    </header>
+    <div class="all-cards-container">
+        <% if (specificeBatch.data.subjects.length> 0) { %>
+            <% specificeBatch.data.subjects.forEach(subject=> { %>
+                <a href="/batches/<%= batchNameSlug %>/subject/<%= subject.slug %>/topics" class="all-class-card">
+                    <img src="<%= subject.imageId %>" alt="<%= subject.subject %>">
+                    <div class="class-details">
+                        <div class="tile-title">
+                            <% if (subject.subject.length > 25) { %>
+                                <%= subject.subject.slice(0, 25) + '...' %>
+                            <% } else { %>
+                                <%= subject.subject %>
+                            <% } %>
+                            </div>
+                        <div class="class-info">
+                            <%= subject.tagCount %> Chapters
+                        </div>
+                    </div>
+                </a>
+                <% }); %>
+                    <% } else { %>
+                        <img src="/images/coming-soon.png" alt="">
+                        <% } %>
+
+    </div>
+</body>
+
+</html>

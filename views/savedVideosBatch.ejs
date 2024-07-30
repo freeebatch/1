@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Contents</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/videosBatch.css">
+</head>
+
+<body>
+    <header>
+        <a href="/saved/batches/<%= batchNameSlug %>/subject/<%= subjectSlug %>/topics"><i class="ri-arrow-left-line"></i></i></a>
+        <h1><%= videosBatch.name %></h1>
+    </header>
+    <section class="list overflow-x-auto no-scrollbar">
+        <button id="lectures" class="active">Lectures</button>
+        <button id="notes" class="inactive">Notes</button>
+        <button id="dpp" class="inactive">DPP</button>
+        <button id="dppVideos" class="inactive">DPP VIDEOS</button>
+    </section>
+    <br>
+    <br>
+    <div id="content">
+        <div id="lectures-content" batchNameSlug="<%= batchNameSlug %>" subjectSlug="<%= subjectSlug %>"
+            chapterSlug="<%= chapterSlug %>">
+            <section class="container">
+                <% if (videosBatch.videosSch.length> 0) { %>
+                <% videosBatch.videosSch.forEach(video=> { %>
+                    <% if (video.videoDetails.videoUrl) { %>
+                        <div video-url="<%= video.videoDetails.videoUrl %>" class="video-card"
+                            onclick="sendVideoUrl(this)">
+                    <% } else { %>
+                        <div video-url="<%= video.videoDetails.embedCode %>" class="video-card"
+                            onclick="freeVideoUrl(this)">
+                    <% } %>
+
+                            <div class="thumbnail-container">
+                                <img class="thumbnail" src="<%= video.videoDetails.image %>"
+                                    alt="Thumbnail">
+                                <img class="play-icon" src="/images/blue-play-icon.svg" alt="Play icon">
+                            </div>
+                            <div class="info">
+                                <div class="info__time">
+                                    <div class="date">
+                                        <%= video.date %>
+                                    </div>
+                                    <div class="duration">
+                                        <img class="clock-icon" src="/images/clock.svg" alt="Clock">
+                                        <span>
+                                            <%= video.videoDetails.duration %>
+                                        </span>
+                                    </div>
+                                </div>
+                                <p class="title">
+                                    <% if (video.videoDetails.name.length > 60) { %>
+                                        <%= video.videoDetails.name.slice(0, 60) + '...' %>
+                                    <% } else { %>
+                                        <%= video.videoDetails.name %>
+                                    <% } %>
+                                </p>
+                            </div>           
+                                        <% if (video.videoDetails.videoUrl) { %>
+                                            <% const parts=video.videoDetails.videoUrl.split('/'); const
+                                                videoId=parts[parts.length - 2]; %>
+                                                <div class="button-div" id="watchButton" onclick="event.stopPropagation(); playVideoOnVlc(this, '<%= videoId %>')">
+                                                    Watch on VLC
+                                                </div>
+                                                <div class="download"
+                                                    onclick="event.stopPropagation(); copyDownloadLink('<%= videoId %>')">
+                                                    <button>1dm Download Link</button>
+                                                </div>
+                                                <% } %>
+                                </div>
+                                <% }); %>
+                        <% } else { %>
+                            <img src="/images/coming-soon.png" alt="Coming Soon">
+                            <% } %>
+
+            </section>
+        </div>
+        <div id="notes-content" batchNameSlug="<%= batchNameSlug %>" subjectSlug="<%= subjectSlug %>"
+            chapterSlug="<%= chapterSlug %>" style="display: none;">
+            <section class="container"></section>
+        </div>
+        <div id="dpp-content" batchNameSlug="<%= batchNameSlug %>" subjectSlug="<%= subjectSlug %>"
+            chapterSlug="<%= chapterSlug %>" style="display: none;">
+            <section class="container"></section>
+        </div>
+        <div id="dppVideos-content" batchNameSlug="<%= batchNameSlug %>" subjectSlug="<%= subjectSlug %>"
+            chapterSlug="<%= chapterSlug %>" style="display: none;">
+            <section class="container"></section>
+        </div>
+    </div>
+
+
+    <script src="/javascripts/savedVideoBatch.js"></script>
+</body>
+
+</html>
