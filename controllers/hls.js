@@ -173,7 +173,9 @@ const convertMPDToHLS = async (mpdId, quality) => {
         
         const main_data2 = await main_data.text();
         const pattern = /(\d{3,4}\.ts)/g;
-        const replacement = `${mainUrl}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
+        // const replacement = `${mainUrl}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
+        const replacement = `https://studywithme.onrender.com/dash/${mpdId}/hls/${quality}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
+
         const newText = main_data2.replace(pattern, replacement).replace("https://api.penpencil.co/v1/videos/", `https://studywithme.onrender.com/`)
         
         return newText;
