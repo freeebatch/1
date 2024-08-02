@@ -178,10 +178,10 @@ const convertMPDToHLS = async (mpdId, quality, type) => {
         if (type === "download") {
             replacement = `${mainUrl}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
         } else {
-            replacement = `https://studywithme.onrender.com/dash/${mpdId}/hls/${quality}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
+            replacement = `https://studywithme-alpha.vercel.app/dash/${mpdId}/hls/${quality}/$1?Policy=${cloudFrontPolicy}&Key-Pair-Id=${cloudFrontKeyPairId}&Signature=${cloudFrontSignature}`;
         }
         
-        const newText = main_data2.replace(pattern, replacement).replace("https://api.penpencil.co/v1/videos/", `https://studywithme.onrender.com/`)
+        const newText = main_data2.replace(pattern, replacement).replace("https://api.penpencil.co/v1/videos/", `https://studywithme-alpha.vercel.app/`)
         
         return newText;
     } catch (error) {
@@ -224,9 +224,9 @@ const multiQualityHLS = async (mpdId, type) => {
 
                 hlsPlaylist += `#EXT-X-STREAM-INF:BANDWIDTH=${bandwidth},RESOLUTION=${width}x${height}\n`;
                 if(type === 'play'){
-                    hlsPlaylist += `https://studywithme.onrender.com/hls?v=${mpdId}&quality=${quality}&type=play\n`;
+                    hlsPlaylist += `https://studywithme-alpha.vercel.app/hls?v=${mpdId}&quality=${quality}&type=play\n`;
                 }else{
-                    hlsPlaylist += `https://studywithme.onrender.com/hls?v=${mpdId}&quality=${quality}&type=download\n`;
+                    hlsPlaylist += `https://studywithme-alpha.vercel.app/hls?v=${mpdId}&quality=${quality}&type=download\n`;
                 }
 
             }
