@@ -94,7 +94,19 @@
         </div>
     </div>
 
-
+    <script>
+        function copyDownloadLink(videoId, event) {
+            const dashboardLink = `https://studywithme-alpha.vercel.app/download/${videoId}/master.m3u8`;
+            const tempInput = document.createElement('input');
+            tempInput.value = dashboardLink;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert("1dm download link copied to your clipbord ✅✅")
+        }
+    </script>
     <script src="/javascripts/savedVideoBatch.js"></script>
 </body>
 
