@@ -44,19 +44,19 @@ app.use(function (err, req, res, next) {
 
 let counter = 0;
 
-async function callURL() {
-  try {
-      const url = "https://studywithme.onrender.com/";
-      const response = await fetch(url);
-      if (response.ok) {
-          console.log("Server Refreshed");
-      } else {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-  } catch (error) {
-      console.error("Error:", error.message);
-  }
-}
+// async function callURL() {
+//   try {
+//       const url = "https://studywithme.onrender.com/";
+//       const response = await fetch(url);
+//       if (response.ok) {
+//           console.log("Server Refreshed");
+//       } else {
+//           throw new Error(`HTTP error! Status: ${response.status}`);
+//       }
+//   } catch (error) {
+//       console.error("Error:", error.message);
+//   }
+// }
 
 app.use(cors());
 const port = process.env.PORT || 3000
@@ -64,10 +64,10 @@ const port = process.env.PORT || 3000
 const server = app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 
-  callURL();
-  if(counter<10){
-    setInterval(callURL, 5 * 60 * 1000);
-  }
+  // callURL();
+  // if(counter<10){
+  //   setInterval(callURL, 5 * 60 * 1000);
+  // }
 });
 
 export default app;
