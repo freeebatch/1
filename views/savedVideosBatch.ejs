@@ -68,7 +68,7 @@
                                                     Watch on VLC
                                                 </div>
                                                 <div class="download"
-                                                    onclick="event.stopPropagation(); copyDownloadLink('<%= videoId %>')">
+                                                    onclick="event.stopPropagation(); copyDownloadLink2('<%= videoId %>')">
                                                     <button>1dm Download Link</button>
                                                 </div>
                                                 <% } %>
@@ -95,7 +95,7 @@
     </div>
 
     <script>
-        function copyDownloadLink(videoId, event) {
+        function copyDownloadLink2(videoId, event) {
             const dashboardLink = `https://studywithme-alpha.vercel.app/download/${videoId}/master.m3u8`;
             const tempInput = document.createElement('input');
             tempInput.value = dashboardLink;
