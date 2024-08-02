@@ -26,9 +26,9 @@ function playVideoOnVlc(button, videoId) {
     button.innerHTML = qualityOptions;
 }
 function copyDownloadLink(videoId, event) {
-    const dashboardLink = `https://studywithme.onrender.com/download/${videoId}/master.m3u8`;
+    const dashboardLink = `https://studywithme-alpha.vercel.app/download/${videoId}/master.m3u8`;
     // const dashboardLink = `https://pw.jarviis.workers.dev?v=${videoId}&quality=720`;
-    // const dashboardLink = `https://studywithme.onrender.com/hls?v=${videoId}&quality=720`;
+    // const dashboardLink = `https://studywithme-alpha.vercel.app/hls?v=${videoId}&quality=720`;
     // const dashboardLink = `https://api.alphastudyofficial.live/v2/alpha/pw/download?v=https://penpencilvod.pc.cdn.bitgravity.com/${videoId}/master.mpd`;
     // const dashboardLink = `https://psitoffers.store/1dm.php?vid=${videoId}`;
     const tempInput = document.createElement('input');
