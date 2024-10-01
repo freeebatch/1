@@ -140,20 +140,22 @@ async function videosBatch(token, batchNameSlug, subjectSlug, chapterSlug, page 
             const data = await response.json();
             if (!(data && data.data && data.data.length >= 1)) {
                 break;
-            }
+            }  
             data.data.forEach(item => {
-                const extractedItem = {
-                    topic: item.topic,
-                    date: item.date,
-                    videoDetails: {
-                        name: item.videoDetails.name ? item.videoDetails.name : '',
-                        image: item.videoDetails.image ? item.videoDetails.image : '',
-                        videoUrl: item.videoDetails.videoUrl ? item.videoDetails.videoUrl : '',
-                        embedCode: item.videoDetails.embedCode ? item.videoDetails.embedCode : '',
-                        duration: item.videoDetails.duration ? item.videoDetails.duration : ''
-                    }
-                };
-                extractedData.push(extractedItem);
+                if(item.videoDetails) {
+                    const extractedItem = {
+                        topic: item.topic,
+                        date: item.date,
+                        videoDetails: {
+                            name: item.videoDetails.name ? item.videoDetails.name : '',
+                            image: item.videoDetails.image ? item.videoDetails.image : '',
+                            videoUrl: item.videoDetails.videoUrl ? item.videoDetails.videoUrl : '',
+                            embedCode: item.videoDetails.embedCode ? item.videoDetails.embedCode : '',
+                            duration: item.videoDetails.duration ? item.videoDetails.duration : ''
+                        }
+                    };
+                    extractedData.push(extractedItem);
+                }
             });
             videosBatchPage++;
         }
@@ -289,18 +291,20 @@ async function dppVideos(token, batchNameSlug, subjectSlug, chapterSlug, retryCo
         const data = await response.json();
         const extractedData = [];
         data.data.forEach(item => {
-            const extractedItem = {
-                topic: item.topic,
-                date: item.date,
-                videoDetails: {
-                    name: item.videoDetails.name ? item.videoDetails.name : '',
-                    image: item.videoDetails.image ? item.videoDetails.image : '',
-                    videoUrl: item.videoDetails.videoUrl ? item.videoDetails.videoUrl : '',
-                    embedCode: item.videoDetails.embedCode ? item.videoDetails.embedCode : '',
-                    duration: item.videoDetails.duration ? item.videoDetails.duration : ''
-                }
-            };
-            extractedData.push(extractedItem);
+            if(item.videoDetails) {
+                const extractedItem = {
+                    topic: item.topic,
+                    date: item.date,
+                    videoDetails: {
+                        name: item.videoDetails.name ? item.videoDetails.name : '',
+                        image: item.videoDetails.image ? item.videoDetails.image : '',
+                        videoUrl: item.videoDetails.videoUrl ? item.videoDetails.videoUrl : '',
+                        embedCode: item.videoDetails.embedCode ? item.videoDetails.embedCode : '',
+                        duration: item.videoDetails.duration ? item.videoDetails.duration : ''
+                    }
+                };
+                extractedData.push(extractedItem);
+            }
         });
         const extractedJson = {
             data: extractedData
@@ -312,8 +316,6 @@ async function dppVideos(token, batchNameSlug, subjectSlug, chapterSlug, retryCo
     }
 }
 
-
-// const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3MTQ0Mzc1MzAuOTA4LCJkYXRhIjp7Il9pZCI6IjYzZTMyNDU5MWE5NjY0MDAxODEwYWQyYSIsInVzZXJuYW1lIjoiODU3NDY5NDg1MCIsImZpcnN0TmFtZSI6Ik5pdGluIiwibGFzdE5hbWUiOiJLdW1hciBHdXB0ZSIsIm9yZ2FuaXphdGlvbiI6eyJfaWQiOiI1ZWIzOTNlZTk1ZmFiNzQ2OGE3OWQxODkiLCJ3ZWJzaXRlIjoicGh5c2ljc3dhbGxhaC5jb20iLCJuYW1lIjoiUGh5c2ljc3dhbGxhaCJ9LCJlbWFpbCI6Im5pdGluZ3VwdGF1bkBnbWFpbC5jb20iLCJyb2xlcyI6WyI1YjI3YmQ5NjU4NDJmOTUwYTc3OGM2ZWYiXSwiY291bnRyeUdyb3VwIjoiSU4iLCJ0eXBlIjoiVVNFUiJ9LCJpYXQiOjE3MTM4MzI3MzB9.BKEai9sxwmLMgdKMSTiRU9mOMRQJH9LnBTveXOSNeO4"
 
 export { paidBatches, freeBatches, specificeBatch, subjectListDetails, videosBatch, videoNotes, dppQuestions, dppVideos };
 
