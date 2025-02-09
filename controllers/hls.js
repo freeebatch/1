@@ -167,9 +167,12 @@ const convertMPDToHLS = async (mpdId, quality, type) => {
             replacement = `https://studywithme-alpha.vercel.app/dash/${mpdId}/hls/${quality}/$1?Policy=${headers['Cookie'].match(/CloudFront-Policy=([^;]+)/)[1]}&Key-Pair-Id=${headers['Cookie'].match(/CloudFront-Key-Pair-Id=([^;]+)/)[1]}&Signature=${headers['Cookie'].match(/CloudFront-Signature=([^;]+)/)[1]}`;
         }
         
-        const newText = main_data2
+        let newText = main_data2
             .replace(pattern, replacement)
             .replace("https://api.penpencil.xyz/v1/videos/", `https://studywithme-alpha.vercel.app/`);
+        newText = newText
+            .replace(pattern, replacement)
+            .replace("https://api.penpencil.co/v1/videos/", `https://studywithme-alpha.vercel.app/`);
 
         return newText;
     } catch (error) {
