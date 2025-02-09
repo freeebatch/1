@@ -169,7 +169,7 @@ const convertMPDToHLS = async (mpdId, quality, type) => {
         
         const newText = main_data2
             .replace(pattern, replacement)
-            .replace("https://api.penpencil.co/v1/videos/", `https://studywithme-alpha.vercel.app/`);
+            .replace("https://api.penpencil.xyz/v1/videos/", `https://studywithme-alpha.vercel.app/`);
 
         return newText;
     } catch (error) {
@@ -225,6 +225,5 @@ const multiQualityHLS = async (mpdId, type) => {
         console.error("Error converting MPD to HLS:", error);
     }
 };
-
 
 export { convertMPDToHLS, multiQualityHLS };

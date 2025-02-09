@@ -136,15 +136,9 @@ router.get('/hls', async function (req, res, next) {
   try {
     const vidID = req.query.v;
     const quality = req.query.quality;
-    let type = '';
-    try{
-      type = req.query.type;
-      if(!type) type="download";
-    }catch(error){
-      type="download";
-    }
-    const data = await convertMPDToHLS(vidID, quality, type);
-    
+    const type = req.query.type;
+    if (!type) type = "play";
+    const data = await convertMPDToHLS(vidID, quality, type)
     if (!data) { return res.status(403).send("Token Expired Change it!"); }
     res.setHeader('Content-Type', 'application/x-mpegurl; charset=utf-8');
     res.setHeader('Content-Disposition', 'attachment; filename="main.m3u8"');
@@ -158,13 +152,8 @@ router.get('/hls', async function (req, res, next) {
 router.get('/download/:vidID/master.m3u8', async function (req, res, next) {
   try {
     const vidID = req.params.vidID;
-    let type = '';
-    try{
-      type = req.query.type;
-      if(!type) type="download";
-    }catch(error){
-      type="download";
-    }
+    const type = req.query.type;
+    console.log(type)
     const data = await multiQualityHLS(vidID, type);
 
     res.setHeader('Content-Type', 'application/x-mpegurl; charset=utf-8');
@@ -180,7 +169,7 @@ router.get('/get-hls-key', async (req, res) => {
   let db = await Token.findOne();
   const token = db.access_token;
   const videoKey = req.query.videoKey;
-  const url = `https://api.penpencil.co/v1/videos/get-hls-key?videoKey=${videoKey}&key=enc.key&authorization=${token}`;
+  const url = `https://api.penpencil.xyz/v1/videos/get-hls-key?videoKey=${videoKey}&key=enc.key&authorization=${token}`;
 
   try {
     const response = await fetch(url);
@@ -200,7 +189,7 @@ router.get('/dash/:vidId/hls/:quality/:ts', async (req, res) => {
   const vidId = req.params.vidId
   const quality = req.params.quality
   const ts = req.params.ts
-  
+
   const url = `https://sec1.pw.live/${vidId}/hls/${quality}/${ts}?Policy=${policy}&Key-Pair-Id=${keyPairId}&Signature=${Signature}`
   try {
     const response = await fetch(url);
