@@ -11,7 +11,7 @@ router.get('/batches', async function (req, res, next) {
 router.get('/batches/:batchNameSlug/details', async function (req, res, next) {
     const specificeBatchdata = await Batch.findOne({ slug: req.params.batchNameSlug }).select('-subjects.chapters');
     const subjects = specificeBatchdata.subjects
-    res.json({ subjects: subjects });
+    res.json(subjects);
 });
 // computer-networks-417461
 router.get('/batches/:batchNameSlug/subject/:subjectSlug/topics', async function (req, res, next) {
@@ -19,7 +19,7 @@ router.get('/batches/:batchNameSlug/subject/:subjectSlug/topics', async function
     if (batch) {
         const subjectListDetailsData = batch.subjects.find(sub => sub.slug === req.params.subjectSlug);
         const chapters = subjectListDetailsData.chapters
-        res.json({ chapters });
+        res.json(chapters);
     } else {
         res.status(404).json({ message: "Batch not found" });
     }
