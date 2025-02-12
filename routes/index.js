@@ -2,7 +2,6 @@ import express from 'express';
 const router = express.Router();
 import { paidBatches, freeBatches, specificeBatch, subjectListDetails, videosBatch, videoNotes, dppQuestions, dppVideos } from '../controllers/pw.js';
 // Your main file
-import { findKey, findKey2 } from '../controllers/keyFinder.js';
 import authLogin from '../middlewares/auth.js';
 import { saveDataToMongoDB, saveAllDataToMongoDB, saveChapterData } from '../controllers/saveBatch.js';
 // import saveDataToMongoDB from '../controllers/new.js';
@@ -65,14 +64,14 @@ router.get('/batches', authLogin, async function (req, res, next) {
   res.render('batch', { paidBatch, freeBatch });
 });
 
-router.get('/batches/save/:batchSlug', authLogin, async function (req, res, next) {
+router.get('/batches/:batchSlug/save', authLogin, async function (req, res, next) {
   const token = req.cookies.token;
   const batchSlug = req.params.batchSlug;
   await saveDataToMongoDB(token, batchSlug);
   res.send('Saved')
 });
 
-router.get('/batches/update/:batchSlug', authLogin, async function (req, res, next) {
+router.get('/batches/:batchSlug/update', authLogin, async function (req, res, next) {
   const token = req.cookies.token;
   const batchSlug = req.params.batchSlug;
   await updateDataToMongoDB(token, batchSlug);
@@ -222,6 +221,14 @@ router.get('/saved/Batches', async function (req, res, next) {
   const batch = await Batch.find().select('-subjects');
   res.render('savedBatch', { batch });
 });
+
+router.get('/saved/batches/:batchSlug/delete', authLogin, async function (req, res, next) {
+  const batchSlug = req.params.batchSlug;
+  const specificeBatchdata = await Batch.findOneAndDelete({ slug: batchSlug });
+  res.send(`<h1>DELETED</h1><br>${specificeBatchdata}`)
+});
+
+
 router.get('/saved/batches/:batchNameSlug/details', async function (req, res, next) {
   const specificeBatchdata = await Batch.findOne({ slug: req.params.batchNameSlug }).select('-subjects.chapters');
   res.render('savedBatchesDetails', { specificeBatch: specificeBatchdata, batchNameSlug: req.params.batchNameSlug });
