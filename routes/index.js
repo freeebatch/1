@@ -135,7 +135,7 @@ router.get('/hls', async function (req, res, next) {
   try {
     const vidID = req.query.v;
     const quality = req.query.quality;
-    const type = req.query.type;
+    let type = req.query.type;
     if (!type) type = "play";
     const data = await convertMPDToHLS(vidID, quality, type)
     if (!data) { return res.status(403).send("Token Expired Change it!"); }
