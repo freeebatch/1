@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Video Player</title>
+
+    <link rel="icon" type="image/jpeg" href="https://i.imgur.com/Z52wJgg.jpg">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.6.12/plyr.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins|Quattrocento+Sans" rel="stylesheet">
+    
+    <style>
+        body {
+            font-family: Poppins, sans-serif;
+            background: #0A0909;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .player-container {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+
+        .circle {
+            width: 20px;
+            height: 20px;
+            margin: 5px;
+            border-radius: 50%;
+            animation: loader-animation 0.75s ease infinite;
+        }
+
+        .circle:nth-child(1) { background-color: #D90429; animation-delay: 0s; }
+        .circle:nth-child(2) { background-color: #FFA300; animation-delay: 0.15s; }
+        .circle:nth-child(3) { background-color: #048BA8; animation-delay: 0.3s; }
+
+        @keyframes loader-animation {
+            0% { transform: scale(0); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="loading" class="loading">
+        <div class="circle"></div>
+        <div class="circle"></div>
+        <div class="circle"></div>
+    </div>
+
+    <div class="player-container">
+        <video id="videoPlayer" controls crossorigin playsinline></video>
+    </div>
+
+    <script src="https://cdn.plyr.io/3.6.12/plyr.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const video = document.getElementById("videoPlayer");
+            const loadingElement = document.getElementById("loading");
+            const videoUrl = "<%= url %>"; // Video URL passed from the server
+
+            const player = new Plyr(video, {
+                controls: [
+                    'play', 'progress', 'current-time', 'mute', 
+                    'volume', 'settings', 'fullscreen'
+                ],
+                tooltips: { controls: true, seek: true },
+                autoplay: false,
+                muted: false
+            });
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(videoUrl);
+                hls.attachMedia(video);
+
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    loadingElement.style.display = "none"; // Hide loader when ready
+                    video.play();
+                });
+
+                hls.on(Hls.Events.ERROR, function (event, data) {
+                    console.error("HLS Error:", data);
+                    alert("Error loading video");
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoUrl;
+                video.addEventListener('loadedmetadata', () => {
+                    loadingElement.style.display = "none";
+                });
+            } else {
+                alert("Your browser does not support HLS playback.");
+            }
+        });
+    </script>
+</body>
+</html>

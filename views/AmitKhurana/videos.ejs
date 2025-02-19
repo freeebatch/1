@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CN Amit Khurana</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/subjectListDetails.css">
+    <style>
+        .tile-title {
+            white-space: wrap !important;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>
+            CN Amit Khurana
+        </h1>
+    </header>
+
+    <div class="container">
+        <% if (data.length> 0) { %>
+            <% data.forEach(course=> { %>
+                <a href="<%= course.url.endsWith('.pdf') ? course.url : (`/amit_khurana/player/${subject}/` + course.id) %>"
+                    class="mat-card">
+                    <div class="border-left">
+                        <h3 class="tile-title">
+                            <%= course.id %>: <%= course.name %>
+                        </h3>
+                    </div>
+                </a>
+                <% }); %>
+                    <% } else { %>
+                        <img src="/images/coming-soon.png" alt="Coming Soon">
+                        <% } %>
+    </div>
+
+</body>
+
+</html>
