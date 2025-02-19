@@ -156,7 +156,7 @@ const convertMPDToHLS = async (mpdId, quality, type) => {
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const main_data2 = await response.text();
+        let main_data2 = await response.text();
 
         // Replace the URLs with the appropriate type (play/download)
         const pattern = /(\d{3,4}\.ts)/g;
