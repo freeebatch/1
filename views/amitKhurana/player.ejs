@@ -82,9 +82,10 @@
             const player = new Plyr(video, {
                 controls: [
                     'play', 'progress', 'current-time', 'mute', 
-                    'volume', 'settings', 'fullscreen'
+                    'volume', 'settings', 'fullscreen', 'rewind', 'fast-forward',
                 ],
                 tooltips: { controls: true, seek: true },
+                speed: { selected: 1, options: [1, 1.25, 1.5, 2, 2.5, 2.75, 3, 3.25, 3.5, 4] },
                 autoplay: false,
                 muted: false
             });
@@ -101,7 +102,7 @@
 
                 hls.on(Hls.Events.ERROR, function (event, data) {
                     console.error("HLS Error:", data);
-                    alert("Error loading video");
+                    // alert("Error loading video");
                 });
             } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
                 video.src = videoUrl;
