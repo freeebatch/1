@@ -131,7 +131,7 @@
 
         function copyDownloadLink(videoUrl, event) {
             const videoId = extractVideoId(videoUrl)
-            const dashboardLink = `https://studywithme.onrender.com/download/${videoId}/master.m3u8`;
+            const dashboardLink = `https://studywithme-alpha.vercel.app/download/${videoId}/master.m3u8`;
             const tempInput = document.createElement('input');
             tempInput.value = dashboardLink;
             document.body.appendChild(tempInput);
