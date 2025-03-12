@@ -1,286 +1,223 @@
-import fetch from 'node-fetch';
+// import { Batch, Subject, Chapter, Video, Note } from '../models/batches.js'
+import {Batch} from '../models/khazana.js'
+import {notesBatch, videosBatch, paidBatches, subjects, topics} from './khazana.js'
 
-export async function paidBatches(token) {
-    const url = 'https://api.penpencil.co/v3/batches/my-batches?mode=1&amount=paid&page=1';
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
-
+async function saveDataToMongoDBKhazana(token, khazanaProgramId) {
     try {
-        const response = await fetch(url, { headers });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        const batch = await Batch.findOne({ khazanaProgramId: khazanaProgramId });
+        if (batch) {
+            console.log('Batch Already Exist!!');
+            return;
         }
-        const data = await response.json();
 
-        // Use Promise.all to resolve all async operations inside map
-        const extractedData = await Promise.all(data.data.map(async item => ({
-            name: item.name,
-            byName: item.byName,
-            language: item.language,
-            previewImage: `${item.previewImage ? item.previewImage.baseUrl + item.previewImage.key : ''}`,
-            slug: item.slug,
-            khazanaProgramId: await getKhazanaProgramId(token, item.slug) // Ensure this is awaited properly
-        })));
+        // Fetch batch data
+        let batchData = await paidBatches(token);
+        batchData.data.forEach(async course => {
+            if (course.khazanaProgramId == khazanaProgramId) {
+                await saveBatchData(course, token);
+            }
+        });
 
-        return { data: extractedData };
+
+        // Fetch and save subject data for each batch
+        await saveSubjectData(token, khazanaProgramId);
+        console.log('Batch Saved :- ', course.name);
+
+        console.log('All data saved successfully.');
     } catch (error) {
-        console.error('Error fetching data:', error);
-        return { data: [] }; // Return an empty array in case of error to avoid undefined issues
+        console.error('Error saving data:', error.message);
     }
 }
 
-
-async function getKhazanaProgramId(token, batchName) {
-    const url = `https://api.penpencil.co/v3/batches/${batchName}/details`;
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
+async function saveBatchData(batchData, token) {
     try {
-        const response = await fetch(url, { headers });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        const khazanaProgramId = data.data.khazanaProgramId;
-
-        return khazanaProgramId;
+        const batch = new Batch({
+            name: batchData.name,
+            byName: batchData.byName,
+            language: batchData.language,
+            previewImage: batchData.previewImage,
+            khazanaProgramId: batchData.khazanaProgramId,
+            slug: batchData.slug,
+            token: token
+        });
+        await batch.save();
+        // console.log('Batch data saved successfully.', batch);
     } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error('Error saving batch data:', error.message);
     }
 }
 
-export async function subjects(token, khazanaProgramId) {
-    const url = `https://api.penpencil.co/v1/programs/${khazanaProgramId}/subjects?page=1`;
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
+async function saveSubjectData(token, khazanaProgramId) {
     try {
-        const response = await fetch(url, { headers });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
+        // Fetch subject data for the given batch
+        const subjectData = await subjects(token, khazanaProgramId);
 
-        // Use Promise.all to wait for all async calls
-        const extractedData = await Promise.all(
-            data.data.map(async item => {
-                return {
-                    name: item.name,
-                    slug: item.slug,
-                    chapters: await chapters(token, item.programId, item._id)
-                };
-            })
-        );
-
-        return { data: extractedData, success: true };
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return { data: [], success: false };
-    }
-}
-
-
-const chapters = async (token, programId, id) => {
-    const url = `https://api.penpencil.co/v2/programs/${programId}/subjects/${id}/chapters?page=1&limit=10`;
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
-
-    try {
-        const response = await fetch(url, { headers });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-
-        const extractedData = data.data.map(item => ({
-            name: `${item.name} ${item.description}`,
-            organizationId: item.organizationId,
-            programId: item.programId,
-            subjectId: item.subjectId,
-            slug: item.slug,
-            previewImage: `${item.imageId ? item.imageId?.baseUrl + item.imageId?.key : 'https://static.pw.live/react-batches/assets/banner.png'}`,
-        }));
-
-        return extractedData;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-
-}
-
-
-export const topics = async (token, khazanaProgramId, slugT, slugC) => {
-    const url = `https://api.penpencil.co/v1/programs/${khazanaProgramId}/subjects/${slugT}/chapters/${slugC}/topics?page=1`
-    const headers = {
-        'Authorization': `Bearer ${token}`
-    };
-    try {
-        const response = await fetch(url, { headers });
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-
-        const extractedData = data.data.map(item => ({
-            name: item.name,
-            topicId: item._id,
-            totalLectures: item.totalLectures,
-            totalNotes: item.totalConcepts,
-            totalExercises: item.totalExercises,
-        }));
-
-        return extractedData
-
-
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return { data: [], success: false }; // Return a consistent structure even on failure
-    }
-}
-
-
-async function getSlug(token, programId, subjectIdSlug, chapterIdSlug, topicId, key) {
-    try {
-        const url = `https://api.penpencil.co/v1/programs/${programId}/subjects/${subjectIdSlug}/chapters/${chapterIdSlug}/topics/${topicId}/contents/sub-topic?page=1`;
-        const headers = {
-            'Authorization': `Bearer ${token}`
-        };
-        const response = await fetch(url, { headers });
-
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+        // Find the batch based on khazanaProgramId
+        const batch = await Batch.findOne({ khazanaProgramId });
+        if (!batch) {
+            console.error('Batch not found');
+            return;
         }
 
-        const data = await response.json();
-
-        if (!data.data || !Array.isArray(data.data)) {
-            throw new Error("Invalid or empty data received");
-        }
-
-        // Use find() to return the first matching slug
-        const foundItem = data.data.find(item => item.name === key);
-        
-        return foundItem ? foundItem.slug : null; // Return null if not found
-    } catch (error) {
-        console.error('Error fetching data:', error.message);
-        return null; // Return null instead of throwing error to avoid breaking flow
-    }
-}
-
-
-export async function videosBatch(token, programId, subjectIdSlug, chapterIdSlug, topicId, page = 1, retryCount = 3) {
-    const subTopicId = await getSlug(token, programId, subjectIdSlug, chapterIdSlug, topicId, 'Lectures');
-
-    let videosBatchPage = 1;
-    const extractedData = [];
-    try {
-        while (true) {
-            // https://api.penpencil.co/v2/programs/contents?programId=653543ca81e74c00187aff4e&subjectId=c-programming---computer-science-618106&chapterId=c-programming-by-697891&topicId=6535485db7a2c00018d423c7&subTopicId=lectures-713019&page=1
-            const url = `https://api.penpencil.co/v2/programs/contents?programId=${programId}&subjectId=${subjectIdSlug}&chapterId=${chapterIdSlug}&topicId=${topicId}&subTopicId=${subTopicId}&page=${videosBatchPage}`;
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'randomid': 'c818e543-8bdd-4207-86f0-717f922a2eaa',
-                'Client-Id': '5eb393ee95fab7468a79d189'
+        // Save subject data under the batch
+        for (const subject of subjectData.data) {
+            const newSubject = {
+                name: subject.name,
+                slug: subject.slug,
+                chapters: subject.chapters.map(chapter => ({
+                    name: chapter.name,
+                    organizationId: chapter.organizationId,
+                    programId: chapter.programId,
+                    subjectId: chapter.subjectId,
+                    slug: chapter.slug,
+                    previewImage: chapter.previewImage
+                }))
             };
-            const response = await fetch(url, { headers });
-            if (!response.ok) {
-                const status = response.status;
-                if (status === 429 && retryCount > 0) {
-                    console.warn(`Received 429 status, retrying... (Attempts left: ${retryCount})`);
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    // Retry the request
-                    return await videosBatch(token, programId, subjectIdSlug, chapterIdSlug, topicId, page, retryCount - 1);
-                } else {
-                    console.log("Err ", status)
-                    return null
-                }
+
+            batch.subjects.push(newSubject);
+        }
+
+        await batch.save();
+        console.log('Subject data saved successfully.');
+
+        // Fetch and save chapter data for each subject and chapter
+        for (const subject of subjectData.data) {
+            for (const chapter of subject.chapters) {
+                await saveTopicsData(token, khazanaProgramId, subject.slug, chapter.slug);
+                console.log(`Subject: ${subject.name}, Chapter: ${chapter.name} saved`);
             }
-            const data = await response.json();
-            if (!(data && data.data && data.data.length >= 1)) {
-                break;
-            }
-            data.data.forEach(item => {
-                if (item.content[0]) {
-                    const extractedItem = {
-                        topic: item.title,
-                        date: item.content[0].videoDetails.createdAt,
-                        videoDetails: {
-                            name: item.content[0].videoDetails.name,
-                            image: item.content[0].videoDetails.image,
-                            videoUrl: item.content[0].videoDetails.videoUrl,
-                            duration: item.content[0].videoDetails.duration
-                        }
-                    };
-                    extractedData.push(extractedItem);
+        }
+    } catch (error) {
+        console.error('Error saving subject data:', error.message);
+    }
+}
+
+
+async function saveTopicsData(token, khazanaProgramId, subjectSlug, chapterSlug) {
+    try {
+
+        const chapterData = await topics(token, khazanaProgramId, subjectSlug, chapterSlug);
+
+        // Find the batch based on slug
+        const batch = await Batch.findOne({ khazanaProgramId: khazanaProgramId });
+        if (!batch) {
+            console.error('Batch not found');
+            return;
+        }
+
+        // Find the subject based on slug
+        const subject = batch.subjects.find(sub => sub.slug === subjectSlug);
+        if (!subject) {
+            console.error('Subject not found');
+            return;
+        }
+
+        const chapter = subject.chapters.find(sub => sub.slug === chapterSlug);
+        if (!chapter) {
+            console.error('Chapter not found');
+            return;
+        }
+
+        // Clear existing chapters in subject
+        chapter.topicSchema = [];
+
+        // Save topic data under the chapter
+        for (const topic of chapterData) {
+            chapter.topicSchema.push({
+                name: topic.name,
+                topicId: topic.topicId,
+                totalLectures: topic.totalLectures,
+                totalNotes: topic.totalNotes,
+                totalExercises: topic.totalExercises
+            });
+        }
+        await batch.save();
+        console.log(`Topics saved for Chapter: ${chapter.name}`);
+
+        // Fetch and save video and notes data for each topic
+        for (const topic of chapterData) {
+            await saveVideoData(token, khazanaProgramId, subjectSlug, chapterSlug, topic.topicId);
+            await saveNotesData(token, khazanaProgramId, subjectSlug, chapterSlug, topic.topicId);
+            console.log(`Video, Notes Saved: ${topic.name}`);
+        }
+    } catch (error) {
+        console.error('Error saving chapter data:', error.message);
+    }
+}
+
+async function saveVideoData(token, khazanaProgramId, subjectSlug, chapterSlug, topicId) {
+    try {
+        const videoData = await videosBatch(token, khazanaProgramId, subjectSlug, chapterSlug, topicId);
+
+        const batch = await Batch.findOne({ khazanaProgramId: khazanaProgramId });
+        if (!batch) return console.error('Batch not found');
+
+        const subject = batch.subjects.find(sub => sub.slug === subjectSlug);
+        if (!subject) return console.error('Subject not found');
+
+        const chapter = subject.chapters.find(chap => chap.slug === chapterSlug);
+        if (!chapter) return console.error('Chapter not found');
+
+        const topic = chapter.topicSchema.find(top => top.topicId === topicId);
+        if (!topic) return console.error('topic not found');
+
+        if (!topic.videosSch) topic.videosSch = [];
+
+        for (const video of videoData.data) {
+            topic.videosSch.push({
+                topic: video.topic,
+                date: video.date,
+                videoDetails: {
+                    name: video.videoDetails.name,
+                    image: video.videoDetails.image,
+                    videoUrl: video.videoDetails.videoUrl,
+                    duration: video.videoDetails.duration,
                 }
             });
-            videosBatchPage++;
         }
-        const extractedJson = {
-            data: extractedData
-        };
-        return extractedJson;
+
+        await batch.save();
+        // console.log('Video data saved successfully.');
     } catch (error) {
-        console.error('Error fetching data:', error.message);
-        throw error; // Re-throw the error to indicate failure
+        console.error('Error saving video data:', error.message);
     }
 }
 
 
-export async function notesBatch(token, programId, subjectIdSlug, chapterIdSlug, topicId, page = 1, retryCount = 3) {
-    const subTopicId = await getSlug(token, programId, subjectIdSlug, chapterIdSlug, topicId, 'Notes');
-    let videosBatchPage = 1;
-    const extractedData = [];
+async function saveNotesData(token, khazanaProgramId, subjectSlug, chapterSlug, topicId) {
     try {
-        while (true) {
-            const url = `https://api.penpencil.co/v2/programs/contents?programId=${programId}&subjectId=${subjectIdSlug}&chapterId=${chapterIdSlug}&topicId=${topicId}&subTopicId=${subTopicId}&page=${videosBatchPage}`;
-            const headers = {
-                'Authorization': `Bearer ${token}`,
-                'randomid': 'c818e543-8bdd-4207-86f0-717f922a2eaa',
-                'Client-Id': '5eb393ee95fab7468a79d189'
-            };
-            const response = await fetch(url, { headers });
-            if (!response.ok) {
-                const status = response.status;
-                if (status === 429 && retryCount > 0) {
-                    console.warn(`Received 429 status, retrying... (Attempts left: ${retryCount})`);
-                    await new Promise(resolve => setTimeout(resolve, 2000));
-                    // Retry the request
-                    return await notesBatch(token, programId, subjectIdSlug, chapterIdSlug, topicId, page, retryCount - 1);
-                } else {
-                    throw new Error(`HTTP error! status: ${status}`);
-                }
-            }
-            const data = await response.json();
-            if (!(data && data.data && data.data.length >= 1)) {
-                break;
-            }
-            data.data.forEach(item => {
-                if (item.content[0]) {
-                    const extractedItem = {
-                        topic: item.text,
-                        date: item.content[0].fileId.createdAt,
-                        noteDetails: {
-                            name: item.content[0].fileId.name,
-                            noteUrl: item.content[0].fileId.baseUrl + item.content[0].fileId.key,
-                            duration: item.content[0].fileId.duration
-                        }
-                    };
-                    extractedData.push(extractedItem);
-                }
+        const notesData = await notesBatch(token, khazanaProgramId, subjectSlug, chapterSlug, topicId);
+
+        const batch = await Batch.findOne({ khazanaProgramId: khazanaProgramId });
+        if (!batch) return console.error('Batch not found');
+
+        const subject = batch.subjects.find(sub => sub.slug === subjectSlug);
+        if (!subject) return console.error('Subject not found');
+
+        const chapter = subject.chapters.find(chap => chap.slug === chapterSlug);
+        if (!chapter) return console.error('Chapter not found');
+
+        const topic = chapter.topicSchema.find(top => top.topicId === topicId);
+        if (!topic) return console.error('topic not found');
+
+        if (!topic.notesSch) topic.notesSch = [];
+
+        for (const note of notesData.data) {
+            topic.notesSch.push({
+                topic: note.noteDetails.name,
+                date: note.date,
+                pdfUrl: note.noteDetails.noteUrl,
+                pdfName: note.noteDetails.name,
             });
-            videosBatchPage++;
         }
-        const extractedJson = {
-            data: extractedData
-        };
-        return extractedJson;
+
+        await batch.save();
+        // console.log('Notes data saved successfully.');
     } catch (error) {
-        console.error('Error fetching data:', error.message);
-        throw error;
+        console.error('Error saving notes data:', error.message);
     }
 }
 
 
+
+export { saveDataToMongoDBKhazana };
