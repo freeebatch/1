@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subject List Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/subjectListDetails.css">
+</head>
+
+<body>
+    <header>
+        <a href="/">
+            <i class="ri-arrow-left-line"></i></a>
+        <h1>
+        </h1>
+    </header>
+    <div class="container">
+        <% if (subjectListDetails.length> 0) { %>
+            <% subjectListDetails.forEach(course=> { %>
+                <a href="/khazana/saved/programs/<%= khazanaProgramId %>/subjects/<%= slugT %>/chapters/<%= slugC %>/topics/<%= course.topicId %>/videos"
+                    class="mat-card">
+                    <div class="border-left">
+                        <h3 class="tile-title">
+                            <%= course.name %>
+                        </h3>
+                        <span class="tile-subtitle">All Videos <%= course.totalLectures %><span class="vl"></span>All
+                                Exercises
+                                <%= course.totalExercises %><span class="vl"></span>All Notes <%= course.totalNotes %>
+                        </span>
+                    </div>
+                </a>
+                <% }); %>
+                    <% } else { %>
+                        <img src="/images/coming-soon.png" alt="Coming Soon">
+                        <% } %>
+
+    </div>
+</body>
+
+</html>

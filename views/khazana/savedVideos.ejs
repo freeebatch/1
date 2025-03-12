@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Contents</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/videosBatch.css">
+</head>
+
+<body>
+
+    <section class="list overflow-x-auto no-scrollbar">
+        <button id="lectures" onclick="activeVideo()" class="active">Lectures</button>
+        <button id="notes" onclick="activeNote()">Notes</button>
+    </section>
+    <br>
+    <br>
+    <div id="content">
+        <div id="lectures-content">
+            <section class="container">
+                <% if (videosBatch.length> 0) { %>
+                    <% videosBatch.forEach(video=> { %>
+                        <% if (video.videoDetails.videoUrl) { %>
+                            <div video-url="<%= video.videoDetails.videoUrl %>" class="video-card"
+                                onclick="sendVideoUrl(this)">
+                                <% } %>
+
+
+                                    <div class="thumbnail-container">
+                                        <img class="thumbnail" src="<%= video.videoDetails.image %>" alt="Thumbnail">
+                                        <img class="play-icon" src="/images/blue-play-icon.svg" alt="Play icon">
+                                    </div>
+                                    <div class="info">
+                                        <div class="info__time">
+                                            <div class="date">
+                                                <%= video.date %>
+                                            </div>
+                                            <div class="duration">
+                                                <img class="clock-icon" src="/images/clock.svg" alt="Clock">
+                                                <span>
+                                                    <%= video.videoDetails.duration %>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <p class="title">
+                                            <% if (video.videoDetails.name.length> 60) { %>
+                                                <%= video.videoDetails.name.slice(0, 60) + '...' %>
+                                                    <% } else { %>
+                                                        <%= video.videoDetails.name %>
+                                                            <% } %>
+                                        </p>
+                                    </div>
+                                    <div class="button-div" id="watchButton"
+                                        onclick="event.stopPropagation(); playVideoOnVlc(this, '<%= video.videoDetails.videoUrl %>')">
+                                        Watch on VLC
+                                    </div>
+                                    <div class="download"
+                                        onclick="event.stopPropagation(); copyDownloadLink('<%= video.videoDetails.videoUrl %>')">
+                                        <button>1dm Download Link</button>
+                                    </div>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <img src="/images/coming-soon.png" alt="Coming Soon">
+                                    <% } %>
+
+            </section>
+        </div>
+        <div id="notes-content" style="display: none;">
+            <section class="container">
+                <% if (notesBatch.length> 0) { %>
+                    <% notesBatch.forEach(note=> { %>
+                        <div class="container"
+                            onclick="downloadPdf('<%= note.pdfUrl %>', '<%= note.pdfName %>')">
+                            <div class="card__pdf">
+                                <div class="content__pdf">
+                                    <p class="attachment-text">
+                                        <%= note.topic %>
+                                    </p>
+                                </div>
+                                <div class="play-div">
+                                    <i class="ri-file-pdf-2-fill"></i>
+                                    <i class="ri-download-fill"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <% }); %>
+                            <% } else { %>
+                                <img src="/images/coming-soon.png" alt="Coming Soon">
+                                <% } %>
+            </section>
+        </div>
+    </div>
+
+    <script>
+        function activeNote() {
+            document.querySelector("#lectures-content").style.display = 'none';
+            document.querySelector("#notes-content").style.display = 'block';
+
+            document.querySelector("#lectures").classList.remove('active');
+            document.querySelector("#notes").classList.add('active');
+        }
+
+        function playVideoOnVlc(button, videoUrl) {
+            const videoId = extractVideoId(videoUrl)
+            const qualityOptions = `
+                <a href="/redirect-to-vlc?v=${videoId}&quality=240" target="_blank">240p</a>
+                <a href="/redirect-to-vlc?v=${videoId}&quality=360" target="_blank">360p</a>
+                <a href="/redirect-to-vlc?v=${videoId}&quality=480" target="_blank">480p</a>
+                <a href="/redirect-to-vlc?v=${videoId}&quality=720" target="_blank">720p</a>
+            `;
+            button.innerHTML = qualityOptions;
+        }
+
+        function activeVideo() {
+            document.querySelector("#notes-content").style.display = 'none'
+            document.querySelector("#lectures-content").style.display = 'block'
+
+            document.querySelector("#lectures").classList.add('active');
+            document.querySelector("#notes").classList.remove('active');
+        }
+
+        function downloadPdf(url, filename) {
+            const anchor = document.createElement('a');
+            anchor.href = url;
+            anchor.download = filename;
+            anchor.click();
+        }
+
+        function copyDownloadLink(videoUrl, event) {
+            const videoId = extractVideoId(videoUrl)
+            const dashboardLink = `https://studywithme.onrender.com/download/${videoId}/master.m3u8`;
+            const tempInput = document.createElement('input');
+            tempInput.value = dashboardLink;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999);
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+            alert("1dm download link copied to your clipbord")
+        }
+
+        function extractVideoId(link) {
+            const parts = link.split('/');
+            const code = parts[parts.length - 2];
+            return code;
+        }
+
+        function sendVideoUrl(element) {
+            const videoUrl = element.getAttribute('video-url');
+            const backendEndpoint = `/play?videoUrl=${encodeURIComponent(videoUrl)}`;
+            window.location.href = backendEndpoint;
+        }
+
+
+
+
+    </script>
+
+
+</body>
+
+</html>

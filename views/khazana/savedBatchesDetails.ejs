@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batch Details</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/batchesDetails.css">
+    <style>
+        
+        .all-cards-container {
+            display: block;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 0 5rem 2rem;
+        }
+
+        .all-class-card {
+            display: block;
+            gap: 1rem;
+            align-items: flex-start;
+            width: 200px;
+            border: 1px solid #ccc;
+            padding: 0.6rem 1rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+            max-width: 300px;
+            min-width: 270px;
+            border-radius: 10px;
+        }
+
+        .all-class-card img {
+            width: 100%;
+            height: auto;
+            border-radius: 1rem;
+        }
+
+        .subject__container {
+            display: block;
+        }
+
+        .subject__container__box {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <a href="/">
+            <i class="ri-arrow-left-line"></i></a>
+        <!-- <h1>
+            <%= data.name %>
+        </h1> -->
+    </header>
+    <div class="all-cards-container">
+        <% if (data.length> 0) { %>
+            <% data.forEach(subject=> { %>
+                <div class="subject__container">
+                    <h2>
+                        <%= subject.name %>
+                    </h2>
+                    <div class="subject__container__box">
+
+
+                        <% subject.chapters.forEach(item=> { %>
+                            <a href="/khazana/saved/programs/<%= khazanaProgramId %>/subjects/<%= subject.slug %>/chapters/<%= item.slug %>/topics/"
+                                class="all-class-card">
+                                <img src="<%= item.previewImage %>" alt="<%= item.previewImage %>">
+                                <div class="class-details">
+                                    <div class="tile-title">
+                                        <%= item.name %>
+                                    </div>
+                                </div>
+                            </a>
+
+
+                            <% }); %>
+                    </div>
+                </div>
+
+                <% }); %>
+                    <% } else { %>
+                        <img src="/images/coming-soon.png" alt="">
+                        <% } %>
+
+    </div>
+</body>
+
+</html>

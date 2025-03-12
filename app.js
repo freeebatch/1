@@ -11,6 +11,8 @@ import fetch from 'node-fetch';
 
 import indexRouter from './routes/index.js';
 import apiRouter from './routes/api.js';
+import testRouter from './routes/test.js';
+import khazanaRouter from './routes/khazana.js';
 import amitKhuranaRouter from './routes/amitKhurana.js';
 
 import './models/connectDB.js'
@@ -28,6 +30,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
+app.use('/test', testRouter);
+app.use('/khazana', khazanaRouter);
 app.use('/amit_khurana', amitKhuranaRouter);
 app.use('/api/v1/', apiRouter);
 

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batches</title>
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/batch.css">
+</head>
+
+<body>
+    <header>
+        <a href="/">
+            <i class="ri-arrow-left-line"></i></a>
+        <h1>
+            Batches
+        </h1>
+    </header>
+    <div class="container">
+        <% if (data && data.length>= 1) { %>
+            <% data.forEach(course=> { %>
+                <div class="card">
+                    <h2>
+                        <% if (course.name.length> 35) { %>
+                            <%= course.name.slice(0, 35) + '...' %>
+                                <% } else { %>
+                                    <%= course.name %>
+                                        <% } %>
+                    </h2>
+                    <img src="<%= course.previewImage %>" alt="<%= course.name %>">
+                    <div>
+                    </div>
+                    <a href="/khazana/saved/programs/<%= course.khazanaProgramId %>">Let's Study</a>
+                </div>
+                <% }); %>
+                    <% } %>
+
+    </div>
+</body>
+
+</html>
