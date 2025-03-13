@@ -143,10 +143,12 @@
                             <div class="solution-container" id="solution-<%= index %>" style="display: none;">
                                 <img src="<%= question.question.solutionDescription[0].imageIds.en.baseUrl + question.question.solutionDescription[0].imageIds.en.key %>"
                                     alt="Solution Image" class="solution-image">
-                                <button class="view-video-btn"
-                                    onclick="window.location.href='/play?videoUrl=<%= question.question.solutionDescription[0].videoDetails.videoUrl %>'">
-                                    View Video Solution
-                                </button>
+                                <% if(question.question.solutionDescription && question.question.solutionDescription[0].videoDetails) { %>
+                                    <button class="view-video-btn"
+                                        onclick="window.location.href='/play?videoUrl=<%= question.question.solutionDescription[0].videoDetails.videoUrl %>'">
+                                        View Video Solution
+                                    </button>
+                                <% } %>
                             </div>
                         </div>
                         <% }); %>
