@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= test.data.name %></title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; padding: 20px; }
+        h1, h2 { text-align: center; }
+        .container { max-width: 800px; margin: auto; }
+        .section { margin-bottom: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+        .instructions { background: #f9f9f9; padding: 10px; }
+        .highlight { font-weight: bold; color: #d9534f; }
+        ul { list-style-type: square; margin-left: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1><%= test.data.name %></h1>
+    <p><strong>Total Questions:</strong> <%= test.data.totalQuestions %></p>
+    <p><strong>Total Marks:</strong> <%= test.data.totalMarks %></p>
+    <p><strong>Max Duration:</strong> <%= test.data.maxDuration %> minutes</p>
+
+    <div class="section">
+        <h2>Syllabus</h2>
+        <div class="instructions"><%- test.data.syllabus %></div>
+    </div>
+
+    <div class="section">
+        <h2>General Instructions</h2>
+        <div class="instructions"><%- test.data.multiGeneralInstructions %></div>
+    </div>
+
+    <div class="section">
+        <h2>Test Instructions</h2>
+        <div class="instructions"><%- test.data.multiTestInstructions %></div>
+    </div>
+</div>
+
+</body>
+</html>

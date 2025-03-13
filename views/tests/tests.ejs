@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tests</title>
+    <link rel="stylesheet" href="/stylesheets/batch.css">
+</head>
+<body>
+    <header>
+        <h1>
+          Tests
+        </h1>
+      </header>
+      <div class="container">
+        <% if (tests && tests.length >= 1) { %>
+            <% tests.forEach(test=> { %>
+              <div class="card">
+                <h2> <%= test.name %> </h2>
+                <img src="<%= test.previewImage %>" alt="<%= test.name %>">
+                <div>
+                </div>
+                <a href="/test/<%= saved ? 'saved/' : ''%>test-service/categoryId/<%= test.categoryId %>/testModeId/<%= test.categoryModeId %>">Let's Practice</a>
+              </div>
+              <% }); %>
+          <% } %>
+    
+      </div>
+</body>
+</html>
