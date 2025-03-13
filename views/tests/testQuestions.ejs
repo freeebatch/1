@@ -138,16 +138,22 @@
                                     <% }); %>
                             </div>
 
-                            <button class="show-solution-btn" data-index="<%= index %>">Show Solution</button>
+                            <% if(question.question.solutionDescription && question.question.solutionDescription.length > 0) { %>
+                                <button class="show-solution-btn" data-index="<%= index %>">Show Solution</button>
+                            <% } %>
+
 
                             <div class="solution-container" id="solution-<%= index %>" style="display: none;">
-                                <img src="<%= question.question.solutionDescription[0].imageIds.en.baseUrl + question.question.solutionDescription[0].imageIds.en.key %>"
+                                <% if(question.question.solutionDescription && question.question.solutionDescription.length > 0) { %>
+                                    <img src="<%= question.question.solutionDescription[0].imageIds.en.baseUrl + question.question.solutionDescription[0].imageIds.en.key %>"
                                     alt="Solution Image" class="solution-image">
-                                <% if(question.question.solutionDescription && question.question.solutionDescription[0].videoDetails) { %>
-                                    <button class="view-video-btn"
-                                        onclick="window.location.href='/play?videoUrl=<%= question.question.solutionDescription[0].videoDetails.videoUrl %>'">
-                                        View Video Solution
-                                    </button>
+                                <% } %>
+                                
+                                    <% if(question.question.solutionDescription && question.question.solutionDescription.length > 0 && question.question.solutionDescription[0].videoDetails) { %>
+                                        <button class="view-video-btn"
+                                            onclick="window.location.href='/play?videoUrl=<%= question.question.solutionDescription[0].videoDetails.videoUrl %>'">
+                                            View Video Solution
+                                        </button>
                                 <% } %>
                             </div>
                         </div>
