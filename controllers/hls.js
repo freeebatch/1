@@ -164,7 +164,7 @@ const convertMPDToHLS = async (mpdId, quality, type) => {
         if (type === "download") {
             replacement = `${mainUrl}/$1?Policy=${headers['Cookie'].match(/CloudFront-Policy=([^;]+)/)[1]}&Key-Pair-Id=${headers['Cookie'].match(/CloudFront-Key-Pair-Id=([^;]+)/)[1]}&Signature=${headers['Cookie'].match(/CloudFront-Signature=([^;]+)/)[1]}`;
         } else {
-            replacement = `https://studywithme-alpha.vercel.app/dash/${mpdId}/hls/${quality}/$1?Policy=${headers['Cookie'].match(/CloudFront-Policy=([^;]+)/)[1]}&Key-Pair-Id=${headers['Cookie'].match(/CloudFront-Key-Pair-Id=([^;]+)/)[1]}&Signature=${headers['Cookie'].match(/CloudFront-Signature=([^;]+)/)[1]}`;
+            replacement = `https://1-navy-nine.vercel.app/dash/${mpdId}/hls/${quality}/$1?Policy=${headers['Cookie'].match(/CloudFront-Policy=([^;]+)/)[1]}&Key-Pair-Id=${headers['Cookie'].match(/CloudFront-Key-Pair-Id=([^;]+)/)[1]}&Signature=${headers['Cookie'].match(/CloudFront-Signature=([^;]+)/)[1]}`;
         }
         
         let newText = main_data2
@@ -214,9 +214,9 @@ const multiQualityHLS = async (mpdId, type) => {
 
                 hlsPlaylist += `#EXT-X-STREAM-INF:BANDWIDTH=${bandwidth},RESOLUTION=${width}x${height}\n`;
                 if(type === 'play'){
-                    hlsPlaylist += `https://studywithme-alpha.vercel.app/hls?v=${mpdId}&quality=${quality}&type=play\n`;
+                    hlsPlaylist += `https://1-navy-nine.vercel.app/hls?v=${mpdId}&quality=${quality}&type=play\n`;
                 }else{
-                    hlsPlaylist += `https://studywithme-alpha.vercel.app/hls?v=${mpdId}&quality=${quality}&type=download\n`;
+                    hlsPlaylist += `https://1-navy-nine.vercel.app/hls?v=${mpdId}&quality=${quality}&type=download\n`;
                 }
             }
         }
