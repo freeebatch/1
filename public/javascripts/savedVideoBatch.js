@@ -26,7 +26,7 @@ function playVideoOnVlc(button, videoId) {
     button.innerHTML = qualityOptions;
 }
 function copyDownloadLink(videoId, event) {
-    const dashboardLink = `https://1-navy-nine.vercel.app/download/${videoId}/master.m3u8`;
+    const dashboardLink = `https://1-six-jet.vercel.app/download/${videoId}/master.m3u8`;
     const tempInput = document.createElement('input');
     tempInput.value = dashboardLink;
     document.body.appendChild(tempInput);
